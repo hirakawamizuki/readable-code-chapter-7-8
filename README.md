@@ -268,7 +268,7 @@ suruct Range {
     int begin;
     int end;
 
-    // 例えば、[0,5)は[3,8)を重なっている
+    // 例えば、[0,5)は[3,8)と重なっている
     bool OverlapsWith(Range over);
 }
 ```
