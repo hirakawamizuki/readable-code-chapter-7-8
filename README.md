@@ -258,3 +258,49 @@ if (bucket != NULL) assert(!bucket->IsOccpied());
 ```
 if(object && object->method()) ...
 ```
+
+## 8.5　例：複雑なロジックを格闘する
+
+お題：Rangeクラスの `OverlapsWith` 関数の実装
+
+```
+suruct Range {
+    int begin;
+    int end;
+
+    // 例えば、[0,5)は[3,8)を重なっている
+    bool OverlapsWith(Range over);
+}
+```
+
+下の図の例だと、A・B・Cは互いに重なっていないが、DはA・B・Cと重なっている。
+
+![](img/range.svg)
+
+愚直に場合分けを行なって実装を完成させたコードの例（かなり複雑だし、本当に正しいかどうかも自信が持てない）：
+
+```
+bool Range::OverlapsWith(Range other) {
+    return (begin >= other.begin && begin < other.end) ||
+           (end > other.begin && end <= other.end) ||
+           (begin <= other.begin && end >= other.end);
+}
+```
+
+### より優雅な手法を見つける
+
+**問題を反対から解く**ことで、問題が簡潔になることがある。
+
+`OverlapsWith()` の反対である「互いに重ならない」場合の条件は以下の2つしかない：
+
+1. 一方の範囲の終点が、ある範囲の始点よりも前にある場合
+2. 一方の範囲の始点が、ある範囲の終点よりも後にある場合
+
+```
+bool Range::OverlapsWith(Range other) {
+    if (other.end <= begin) return false;  // 条件1  
+    if (other.begin >= end) return false;  // 条件2
+    return true;  // それ以外の場合は重なっている
+}
+```
+
