@@ -154,7 +154,7 @@ reply.Done();  // ケース①②③共通
 ```
 
 例（変更後）：
-```
+```.js
 if (user_result != SUCCESS) {  // ケース③から返す
     reply.WriteErrors(user_result);
     reply.Done();
@@ -210,3 +210,51 @@ reply.Done();
 
 要約変数を追加することで、伝えたい概念を明確に表現できる。<br>
 要約変数を最上部で定義することで、概念を事前に伝えることもできる。
+
+## 8.3　ド・モルガンの法則を使う
+
+ド・モルガンの法則：
+
+```
+not (a or b or c) ↔︎ (not a) and (not b) and (not c)
+not (a and b and c) ↔︎ (not a) or (not b) or (not c)
+```
+
+ド・モルガンの法則を使って、論理式を読みやすくすることができる場合がある。
+
+```.js
+// わかりにくい
+if(!(file_exists && !is_protected)) Error("Sorry,could not read file.");
+// こちらのほうがわかりやすい
+if(!fle_exists || is_protected) Error("Sorry,could not read file.");
+```
+
+## 8.4　短絡評価の悪用
+
+ブール演算子における短絡評価：
+* `if (a || b)` の `a` が `true` であれば `b` は評価されない
+* `if (a && b)` の `a` が `false` であれば `b` は評価されない
+
+短絡評価を使ったため読みにくくなったコードの例（たった1行だが、立ち止まって考えなくてはならない）：
+
+```
+// キーを元にバケットを取得する。バケットがnullでなければ、バケットが使用されていないかを確認する。
+assert((!(bucket = FindBucket(key)) || !bucket->IsOccupied()));
+```
+
+以下のように書き換えた方が理解しやすい。
+
+```
+bucket = FindBucket(key);
+if (bucket != NULL) assert(!bucket->IsOccpied());
+```
+
+鍵となる考え：
+「頭がいい」コードに気を付ける。あとで他の人がコードを読むときにわかりにくくなる。
+
+何でも短絡評価を避けろというわけではなく、簡潔に使える場合は利用しても良い。<br>
+例えば、 `object` がnullであれば計算をやめたい場合など。
+
+```
+if(object && object->method()) ...
+```
