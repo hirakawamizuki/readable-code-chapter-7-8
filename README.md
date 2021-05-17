@@ -195,7 +195,7 @@ reply.Done();
 ガード節の極端な例：
 
 * ガード節使用前：
-    ```
+    ```.js
     function hoge(a, b, c) {
         if (a === null) {
             result = 0
@@ -214,12 +214,12 @@ reply.Done();
     }
     ```
 * ガード節使用後：
-    ```
+    ```.js
     function hoge(a, b, c) {
-        if (a === null) return 0;
-        if (b === null) return 0;
-        if (c === null) return 0;
-        return 1;
+        if (a === null) return 0
+        if (b === null) return 0
+        if (c === null) return 0
+        return 1
     }
     ```
 
