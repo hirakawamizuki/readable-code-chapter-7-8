@@ -85,7 +85,21 @@ do/whileループはwhileループで書き直せることが多い。
 
 ## 7.5　関数から早く返す
 
-関数で複数のreturn文を使ってはいけないなんてことはない（むしろ望ましい時もある）。
+関数で複数のreturn文を使ってはいけないなんてことはなく、むしろ望ましい時もある。
+
+**ガード節**：処理の対象外としたい条件を、関数やループの先頭に集めてreturnやcontinue/breakで関数から早めに返す方法
+
+ガード節の例：
+```
+public boolean Contains (String str, String substr) {
+    if (str == null || substr == null) return false;
+    if (substr.equals("")) return true;
+
+    // 以降では、 str == null または substr == null や、 
+    // substr.equals("") のケースは記憶しておかなくてよくなる
+    ...
+}
+```
 
 しかし、関数の出口を1つにしたい（returnを一度だけにしたい）ような場合がないわけでもない。
 * 例：何らかのクリーンアップコードを確実に実行したい場合
@@ -173,6 +187,43 @@ reply.Done();
 ```
 
 ネストの深さが2レベルから1レベルになった
+
+### (補足) ガード節
+
+**ガード節**：処理の対象外としたい条件を、関数やループの先頭に集めてreturnやcontinue/breakで関数から早めに返す方法
+
+ガード節の極端な例：
+
+* ガード節使用前：
+    ```
+    function hoge(a, b, c) {
+        if (a === null) {
+            result = 0
+        } else {
+            if (b === null) {
+                result = 0
+            } else {
+                if (c === null) {
+                    result = 0
+                } else {
+                    result = 1
+                }
+            }
+        }
+        return result
+    }
+    ```
+* ガード節使用後：
+    ```
+    function hoge(a, b, c) {
+        if (a === null) return 0;
+        if (b === null) return 0;
+        if (c === null) return 0;
+        return 1;
+    }
+    ```
+
+7.7節の例も、ガード節を使ってネストの深さが2レベルから1レベルにしていた。
 
 ## 7.8　実行の流れを終えるかい？
 
