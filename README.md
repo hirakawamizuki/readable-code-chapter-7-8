@@ -310,17 +310,17 @@ if (bucket != NULL) assert(!bucket->IsOccpied());
 if(object && object->method()) ...
 ```
 
-## 8.5　例：複雑なロジックを格闘する
+## 8.5　例：複雑なロジックと格闘する
 
 お題：Rangeクラスの `OverlapsWith` 関数の実装
 
 ```
-suruct Range {
+sutruct Range {
     int begin;
     int end;
 
     // 例えば、[0,5)は[3,8)と重なっている
-    bool OverlapsWith(Range over);
+    bool OverlapsWith(Range other);
 }
 ```
 
